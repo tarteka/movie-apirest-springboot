@@ -5,10 +5,12 @@ import com.tarteka.movies.entity.RoleEntity;
 import com.tarteka.movies.entity.RoleTypeEnum;
 import com.tarteka.movies.entity.UserEntity;
 import com.tarteka.movies.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 import java.util.Set;
@@ -19,6 +21,9 @@ public class MoviesApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MoviesApplication.class, args);
 	}
+
+	@Value("${TEST_PASSWORD}")  // Inyecta la variable de entorno
+	private String testPassword;
 
 	@Bean
 	CommandLineRunner init(UserRepository userRepository) {
@@ -68,7 +73,7 @@ public class MoviesApplication {
 			// create USERS
 			UserEntity userAdmin = UserEntity.builder()
 					.username("tarteka")
-					.password("1234")
+					.password(new BCryptPasswordEncoder().encode(testPassword))
 					.isEnabled(true)
 					.accountNoExpired(true)
 					.accountNoLocked(true)
@@ -78,7 +83,7 @@ public class MoviesApplication {
 
 			UserEntity userUsuario = UserEntity.builder()
 					.username("usuario")
-					.password("1234")
+					.password(new BCryptPasswordEncoder().encode(testPassword))
 					.isEnabled(true)
 					.accountNoExpired(true)
 					.accountNoLocked(true)
@@ -88,7 +93,7 @@ public class MoviesApplication {
 
 			UserEntity userGuest = UserEntity.builder()
 					.username("guest")
-					.password("1234")
+					.password(new BCryptPasswordEncoder().encode(testPassword))
 					.isEnabled(true)
 					.accountNoExpired(true)
 					.accountNoLocked(true)
@@ -98,7 +103,7 @@ public class MoviesApplication {
 
 			UserEntity userDev = UserEntity.builder()
 					.username("dev")
-					.password("1234")
+					.password(new BCryptPasswordEncoder().encode(testPassword))
 					.isEnabled(true)
 					.accountNoExpired(true)
 					.accountNoLocked(true)
