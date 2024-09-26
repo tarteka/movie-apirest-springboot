@@ -1,6 +1,8 @@
 package com.tarteka.movies.repositories;
 
-import com.tarteka.movies.models.Movie;
+import com.tarteka.movies.entity.MovieEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface MovieRepository extends JpaRepository<Movie, Long> {}
+@Repository
+public interface MovieRepository extends JpaRepository<MovieEntity, Long> {}

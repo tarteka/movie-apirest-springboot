@@ -1,6 +1,6 @@
 package com.tarteka.movies.controllers;
 
-import com.tarteka.movies.models.Movie;
+import com.tarteka.movies.entity.MovieEntity;
 import com.tarteka.movies.repositories.MovieRepository;
 import java.util.List;
 import java.util.Optional;
@@ -26,21 +26,21 @@ public class MovieController {
 
     @CrossOrigin
     @GetMapping
-    public List<Movie> getAllMovies() {
+    public List<MovieEntity> getAllMovies() {
         return movieRepository.findAll();
     }
 
     @CrossOrigin
     @GetMapping("/{id}")
-    public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {
-        Optional<Movie> movie = movieRepository.findById(id);
+    public ResponseEntity<MovieEntity> getMovieById(@PathVariable Long id) {
+        Optional<MovieEntity> movie = movieRepository.findById(id);
         return movie.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @CrossOrigin
     @PostMapping
-    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
-        Movie savedMovie = movieRepository.save(movie);
+    public ResponseEntity<MovieEntity> createMovie(@RequestBody MovieEntity movie) {
+        MovieEntity savedMovie = movieRepository.save(movie);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedMovie);
     }
 
@@ -57,31 +57,31 @@ public class MovieController {
 
     @CrossOrigin
     @PutMapping("/{id}")
-    public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @RequestBody Movie updatedMovie) {
+    public ResponseEntity<MovieEntity> updateMovie(@PathVariable Long id, @RequestBody MovieEntity updatedMovie) {
         if (!movieRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
 
         updatedMovie.setId(id);
-        Movie savedMovie = movieRepository.save(updatedMovie);
+        MovieEntity savedMovie = movieRepository.save(updatedMovie);
         return ResponseEntity.ok(savedMovie);
     }
 
     @CrossOrigin
     @GetMapping("vote/{id}/{rating}")
-    public ResponseEntity<Movie> voteMovie(@PathVariable Long id, @PathVariable double rating) {
+    public ResponseEntity<MovieEntity> voteMovie(@PathVariable Long id, @PathVariable double rating) {
         if (!movieRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
 
-        Optional<Movie> optionalMovie = movieRepository.findById(id);
-        Movie movie = optionalMovie.get();
+        Optional<MovieEntity> optionalMovie = movieRepository.findById(id);
+        MovieEntity movie = optionalMovie.get();
         double newRating = ((movie.getVotes() * movie.getRating()) + rating) / movie.getVotes() + 1;
 
         movie.setRating(newRating);
         movie.setVotes(movie.getVotes() + 1);
 
-        Movie savedMovie = movieRepository.save(movie);
+        MovieEntity savedMovie = movieRepository.save(movie);
 
         return ResponseEntity.ok(savedMovie);
     }
