@@ -74,9 +74,12 @@ public class MovieController {
             return ResponseEntity.notFound().build();
         }
 
+        rating = Math.max(0.0, Math.min(rating, 10.0));
+
         Optional<MovieEntity> optionalMovie = movieRepository.findById(id);
         MovieEntity movie = optionalMovie.get();
-        double newRating = ((movie.getVotes() * movie.getRating()) + rating) / movie.getVotes() + 1;
+
+        double newRating = ((movie.getVotes() * movie.getRating()) + rating) / (movie.getVotes() + 1);
 
         movie.setRating(newRating);
         movie.setVotes(movie.getVotes() + 1);
