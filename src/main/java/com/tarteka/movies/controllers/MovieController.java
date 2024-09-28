@@ -77,7 +77,7 @@ public class MovieController {
         rating = Math.max(0.0, Math.min(rating, 10.0));
 
         Optional<MovieEntity> optionalMovie = movieRepository.findById(id);
-        MovieEntity movie = optionalMovie.get();
+        MovieEntity movie = optionalMovie.orElseThrow(() -> new RuntimeException("Película no encontrada.")); //como optionalMovie.get() pero manejando el error.
 
         double newRating = ((movie.getVotes() * movie.getRating()) + rating) / (movie.getVotes() + 1);
 
